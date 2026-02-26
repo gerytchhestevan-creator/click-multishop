@@ -1198,8 +1198,17 @@ footer {
         display: block;
     }
 
+    .hero-overlay {
+        background: linear-gradient(to bottom, rgba(9, 9, 11, 0.9), rgba(9, 9, 11, 0.65), rgba(9, 9, 11, 0.95));
+    }
+
     .hero h1 {
         font-size: 2.5rem;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero p {
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     }
 
     .hero-search-large {
