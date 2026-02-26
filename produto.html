@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinho Premium Cabernet Sauvignon Reserva | Click Multishop</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Top Bar -->
+    <div class="topbar">
+        <span>Atenção!! Este site contém produtos impróprios para menores de 18 anos (Bebidas Alcoólicas). Lei
+            15.234/2025.</span>
+        <div class="topbar-contact">
+            Atendimento: <a href="#"><i class="fab fa-whatsapp"></i> 41 987842233</a>
+        </div>
+    </div>
+
+    <!-- Header Glassmorphism -->
+    <header id="main-header" class="scrolled"> <!-- Force scrolled state for inner pages -->
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="logo.png" alt="Click Multishop Logo">
+            </a>
+
+            <nav class="main-nav">
+                <a href="index.html#categorias"><i class="fas fa-list"></i> Categorias</a>
+                <a href="#" class="demo-link">Delicatessen - Alimentos</a>
+                <a href="#" class="demo-link">Bebidas importadas</a>
+                <a href="#" class="demo-link">Perfumaria</a>
+            </nav>
+
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar produto...">
+                    <button id="nav-search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <a href="#" class="icon-link demo-link"><i class="far fa-user"></i></a>
+                <a href="#" class="icon-link cart-link demo-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Product Details Section -->
+    <section class="product-page">
+        <div class="container">
+            <!-- Breadcrumb Navigation -->
+            <nav class="breadcrumb">
+                <a href="index.html">Início</a> >
+                <a href="#" class="demo-link">Bebidas Importadas</a> >
+                <span>Vinho Chileno</span>
+            </nav>
+
+            <div class="product-wrapper">
+                <!-- Product Gallery -->
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img id="current-image"
+                            src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?q=80&w=800&auto=format&fit=crop"
+                            alt="Vinho Chileno">
+                    </div>
+                    <div class="thumbnail-list">
+                        <img class="thumbnail active"
+                            src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?q=80&w=200&auto=format&fit=crop"
+                            alt="Thumbnail 1" onclick="changeImage(this.src)">
+                        <img class="thumbnail"
+                            src="https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=200&auto=format&fit=crop"
+                            alt="Thumbnail 2" onclick="changeImage(this.src)">
+                        <img class="thumbnail"
+                            src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?q=80&w=200&auto=format&fit=crop"
+                            alt="Thumbnail 3" onclick="changeImage(this.src)">
+                    </div>
+                </div>
+
+                <!-- Product Info & Checkout -->
+                <div class="product-details">
+                    <div class="product-badges">
+                        <span class="badge top-seller">Mais Vendido</span>
+                        <span class="badge imported"><i class="fas fa-plane-departure"></i> Importado do Chile</span>
+                    </div>
+
+                    <h1 class="product-title">Vinho Premium Cabernet Sauvignon Reserva 750ml</h1>
+
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>(128 avaliações)</span>
+                    </div>
+
+                    <p class="product-description">
+                        Um vinho tinto elegante e estruturado, com notas marcantes de frutas vermelhas maduras, baunilha
+                        e um leve toque de especiarias. Envelhecido por 12 meses em barris de carvalho francês. Perfeito
+                        para acompanhar carnes vermelhas e queijos curados.
+                    </p>
+
+                    <div class="price-container">
+                        <span class="old-price">R$ 220,00</span>
+                        <span class="current-price">R$ 189,90</span>
+                        <span class="installment-info">ou em até <strong>6x de R$ 31,65</strong> sem juros</span>
+                        <div class="pix-discount">
+                            <i class="fab fa-pix"></i> <strong>R$ 170,91</strong> com 10% de desconto no Pix
+                        </div>
+                    </div>
+
+                    <div class="purchase-actions">
+                        <div class="quantity-selector">
+                            <button onclick="changeQuantity(-1)"><i class="fas fa-minus"></i></button>
+                            <input type="number" id="product-quantity" value="1" min="1" max="12">
+                            <button onclick="changeQuantity(1)"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <button class="btn-primary buy-large-btn" id="add-to-cart-btn">
+                            <i class="fas fa-shopping-bag"></i> Adicionar ao Carrinho
+                        </button>
+                    </div>
+
+                    <div class="trust-signals">
+                        <div class="trust-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Compra 100% Segura</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Devolução em até 7 dias</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-award"></i>
+                            <span>Produto Original Garantido</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-col brand-col">
+                    <img src="logo.png" alt="Click Multishop Logo" class="footer-logo">
+                    <p>A Click Multishop Ecommerce é uma empresa especializada na importação e comercialização em
+                        produtos de diversos países do mundo.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <ul>
+                        <li><a href="#">Bebidas Importadas</a></li>
+                        <li><a href="#">Delicatessen</a></li>
+                        <li><a href="#">Perfumaria</a></li>
+                        <li><a href="#">Lançamentos</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Institucional</h4>
+                    <ul>
+                        <li><a href="#">Quem Somos</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Trocas e Devoluções</a></li>
+                        <li><a href="#">Fale Conosco</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Atendimento</h4>
+                    <ul class="contact-info">
+                        <li><i class="fab fa-whatsapp"></i> (41) 98784-2233</li>
+                        <li><i class="far fa-envelope"></i> contato@clickmultishopecommerce.com.br</li>
+                        <li><i class="fas fa-clock"></i> Seg a Sex: 09h às 18h</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Click Multishop Ecommerce Ltda. Todos os direitos reservados.</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-pix"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts for Product Page -->
+    <script>
+        // Quantity Logic
+        function changeQuantity(change) {
+            const qtyInput = document.getElementById('product-quantity');
+            let currentVal = parseInt(qtyInput.value);
+            let newVal = currentVal + change;
+            if (newVal >= 1 && newVal <= 12) {
+                qtyInput.value = newVal;
+            }
+        }
+
+        // Image Gallery Logic
+        function changeImage(newSrc) {
+            document.getElementById('current-image').src = newSrc;
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumb => {
+                if (thumb.src === newSrc) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu demo
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            if (mobileBtn) {
+                mobileBtn.addEventListener('click', () => {
+                    alert('Menu mobile seria aberto aqui.');
+                });
+            }
+
+            // Buy button animation feedback
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const originalText = addToCartBtn.innerHTML;
+                    addToCartBtn.innerHTML = '<i class="fas fa-check"></i> Adicionado com Sucesso!';
+                    addToCartBtn.style.backgroundColor = '#059669'; // Emerald Green
+                    addToCartBtn.style.transform = 'scale(0.98)';
+
+                    setTimeout(() => {
+                        addToCartBtn.innerHTML = originalText;
+                        addToCartBtn.style.backgroundColor = '';
+                        addToCartBtn.style.transform = 'scale(1)';
+                    }, 2500);
+                });
+            }
+
+            // Demo links
+            const demoLinks = document.querySelectorAll('.demo-link');
+            demoLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert('Navegação de demonstração! Este link levaria para a vitrine na loja real.');
+                });
+            });
+
+            // Demo Search Navbar
+            const navSearchBtn = document.getElementById('nav-search-btn');
+            if (navSearchBtn) {
+                navSearchBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const icon = navSearchBtn.querySelector('i');
+                    icon.className = 'fas fa-spinner fa-spin';
+                    setTimeout(() => {
+                        icon.className = 'fas fa-search';
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
