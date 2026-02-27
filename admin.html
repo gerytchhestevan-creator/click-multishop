@@ -33,17 +33,20 @@
             margin: 0;
             padding: 0;
             display: flex;
+            min-height: 100vh;
         }
 
         /* Sidebar */
         .sidebar {
             width: 250px;
-            background-color: var(--surface);
+            background: linear-gradient(180deg, var(--surface) 0%, var(--bg-dark) 100%);
             height: 100vh;
             padding: 2rem;
             box-sizing: border-box;
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             position: fixed;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .sidebar h2 {
@@ -65,13 +68,15 @@
 
         .nav-item:hover,
         .nav-item.active {
-            background-color: var(--surface-light);
+            background: rgba(212, 175, 55, 0.1);
             color: var(--primary);
+            box-shadow: inset 4px 0 0 var(--primary);
         }
 
         .nav-item i {
-            margin-right: 10px;
+            margin-right: 12px;
             width: 20px;
+            text-align: center;
         }
 
         /* Main Content */
@@ -81,6 +86,7 @@
             flex: 1;
             min-height: 100vh;
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
 
         .header {
@@ -99,12 +105,19 @@
 
         /* Cards and Forms */
         .card {
-            background-color: var(--surface);
-            border-radius: 12px;
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
             padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
         }
 
         .form-grid {
@@ -269,6 +282,92 @@
             width: 100%;
             justify-content: center;
         }
+
+        /* Mobile Menu Toggle */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1100;
+            background-color: var(--primary);
+            color: #000;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            width: 45px;
+            height: 45px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                margin-top: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            th,
+            td {
+                padding: 0.8rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .product-img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .btn-primary,
+            .btn-danger {
+                padding: 0.8rem 1.2rem;
+            }
+
+            td[style*="display: flex"] {
+                flex-direction: column;
+                gap: 5px !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                padding: 1.5rem;
+            }
+
+            .login-box {
+                padding: 2rem;
+                margin: 1rem;
+            }
+        }
     </style>
 </head>
 
@@ -291,7 +390,11 @@
     <!-- Conteúdo do Painel (Oculto até o login) -->
     <div id="app-content" style="display: none; width: 100%;">
 
-        <aside class="sidebar">
+        <button class="mobile-toggle" id="sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <aside class="sidebar" id="sidebar">
             <h2>Click Multishop</h2>
             <a href="#" class="nav-item active"><i class="fas fa-box"></i> Produtos</a>
             <a href="index.html" class="nav-item" target="_blank"><i class="fas fa-external-link-alt"></i> Ver Loja</a>
@@ -399,6 +502,34 @@
 
         let supabaseClient = null;
         let isConnected = false;
+
+        // --- MOBILE TOGGLE ---
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                const icon = sidebarToggle.querySelector('i');
+                if (sidebar.classList.contains('active')) {
+                    icon.className = 'fas fa-times';
+                } else {
+                    icon.className = 'fas fa-bars';
+                }
+            });
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 992) {
+                if (sidebar.classList.contains('active') &&
+                    !sidebar.contains(e.target) &&
+                    !sidebarToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                    sidebarToggle.querySelector('i').className = 'fas fa-bars';
+                }
+            }
+        });
 
         // --- SISTEMA DE LOGIN SIMPLES ---
         const SENHA_ADMIN = "admin123"; // 👈 Troque a senha do painel aqui
