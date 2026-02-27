@@ -1,89 +1,231 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="pt-BR">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.10.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.10.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.10.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.10.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.10.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.10.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.10.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.10.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.10.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.10.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Multishop Ecommerce | Produtos Premium</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+<body>
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
-      });
-    </script>
-  </body>
+
+    <!-- Header Glassmorphism -->
+    <header id="main-header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="Click Multishop Logo">
+            </a>
+
+            <nav class="main-nav">
+                <a href="#categorias"><i class="fas fa-list"></i> Categorias</a>
+                <a href="#destaques" onclick="filterCategory('Delicatessen', event)">Delicatessen - Alimentos</a>
+                <a href="#destaques" onclick="filterCategory('Bebidas', event)">Bebidas importadas</a>
+                <a href="#destaques" onclick="filterCategory('Perfumaria', event)">Perfumaria</a>
+            </nav>
+
+            <div class="header-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar produto...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <a href="#" class="icon-link"><i class="far fa-user"></i></a>
+                <a href="#" class="icon-link cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-badge">Produtos Premium & Importados</span>
+            <h1>Descubra o Mundo em<br><span class="highlight">Cada Clique</span></h1>
+            <p>As melhores e mais renomadas marcas em produtos importados. Clicou, comprou, chegou. Simples assim.</p>
+            <div class="hero-search-large">
+                <input type="text" placeholder="O que você está procurando hoje?">
+                <button class="btn-primary"><i class="fas fa-search"></i> Pesquisar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categorias" class="categories">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nossas <span class="highlight">Categorias</span></h2>
+                <p>Navegue por nossa seleção premium de produtos</p>
+            </div>
+
+            <div class="categories-grid">
+                <!-- Categoria 1 -->
+                <a href="#destaques" class="category-card" onclick="filterCategory('Bebidas', event)">
+                    <div class="category-bg"
+                        style="background-image: url('https://images.unsplash.com/photo-1569529465841-dfecdab7503b?q=80&w=600&auto=format&fit=crop');">
+                    </div>
+
+                    <div class="category-content">
+                        <h3>Bebidas Importadas</h3>
+                        <p>Vinhos, Whiskys, Vodka e mais</p>
+                        <span class="explore-btn">Explorar <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+
+                <!-- Categoria 2 -->
+                <a href="#destaques" class="category-card" onclick="filterCategory('Delicatessen', event)">
+                    <div class="category-bg"
+                        style="background-image: url('https://images.unsplash.com/photo-1621939514649-280e2ee25f60?q=80&w=600&auto=format&fit=crop');">
+                    </div>
+
+                    <div class="category-content">
+                        <h3>Delicatessen</h3>
+                        <p>Chocolates, Biscoitos e Alfajores</p>
+                        <span class="explore-btn">Explorar <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+
+                <!-- Categoria 3 -->
+                <a href="#destaques" class="category-card" onclick="filterCategory('Perfumaria', event)">
+                    <div class="category-bg"
+                        style="background-image: url('https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=600&auto=format&fit=crop');">
+                    </div>
+
+                    <div class="category-content">
+                        <h3>Perfumaria</h3>
+                        <p>Fragrâncias Exclusivas</p>
+                        <span class="explore-btn">Explorar <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="destaques" class="featured-products">
+        <div class="container">
+            <div class="section-header">
+                <h2>Destaques <span class="highlight">Premium</span></h2>
+            </div>
+
+            <div class="products-grid" id="produtos-container">
+                <!-- Produtos serão carregados dinamicamente via Supabase aqui -->
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-color);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                    <p style="margin-top: 15px;">Carregando produtos premium...</p>
+                </div>
+            </div>
+
+            <div class="text-center" style="margin-top: 40px;">
+                <a href="#destaques" class="btn-outline" onclick="filterCategory('Todos', event)">Ver Todos os
+                    Produtos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Banner -->
+    <section class="features-banner">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-truck-fast"></i></div>
+                    <div class="feature-text">
+                        <h4>Entrega Rápida</h4>
+                        <p>Enviamos para todo o Brasil</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+                    <div class="feature-text">
+                        <h4>Compra Segura</h4>
+                        <p>Pagamento 100% protegido</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-box-open"></i></div>
+                    <div class="feature-text">
+                        <h4>Originalidade</h4>
+                        <p>Produtos 100% originais</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-col brand-col">
+                    <img src="logo.png" alt="Click Multishop Logo" class="footer-logo">
+                    <p>A Click Multishop Ecommerce é uma empresa especializada na importação e comercialização em
+                        produtos de diversos países do mundo.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Categorias</h4>
+                    <ul>
+                        <li><a href="#">Bebidas Importadas</a></li>
+                        <li><a href="#">Delicatessen</a></li>
+                        <li><a href="#">Perfumaria</a></li>
+                        <li><a href="#">Lançamentos</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Institucional</h4>
+                    <ul>
+                        <li><a href="#">Quem Somos</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Trocas e Devoluções</a></li>
+                        <li><a href="#">Fale Conosco</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Atendimento</h4>
+                    <ul class="contact-info">
+                        <li><i class="fab fa-whatsapp"></i> (41) 98784-2233</li>
+                        <li><i class="far fa-envelope"></i> contato@clickmultishopecommerce.com.br</li>
+                        <li><i class="fas fa-clock"></i> Seg a Sex: 09h às 18h</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Click Multishop Ecommerce Ltda. Todos os direitos reservados.</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-pix"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+</body>
+
 </html>
