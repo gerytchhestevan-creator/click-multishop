@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle - Click Multishop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --primary: #D4AF37;
+            /* Dourado Premium */
+            --bg-dark: #121212;
+            --surface: #1E1E1E;
+            --surface-light: #2A2A2A;
+            --text: #F5F5F5;
+            --text-muted: #A0A0A0;
+            --danger: #ff4757;
+            --success: #2ed573;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--surface);
+            height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: var(--surface-light);
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            flex: 1;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        /* Cards and Forms */
+        .card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        input,
+        select,
+        textarea {
+            background-color: var(--bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button.btn-primary {
+            background-color: var(--primary);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button.btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        button.btn-danger {
+            background-color: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button.btn-danger:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .product-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        /* Setup message */
+        .setup-alert {
+            background-color: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--primary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .setup-alert code {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Login Modal */
+        #login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--bg-dark);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background-color: var(--surface);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .login-box h2 {
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .login-box input {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .login-box button {
+            width: 100%;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Tela de Login -->
+    <div id="login-modal">
+        <div class="login-box">
+            <h2><i class="fas fa-lock"></i> Acesso Restrito</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <input type="password" id="admin-password" placeholder="Digite a senha..." required>
+                </div>
+                <button type="submit" class="btn-primary">Entrar no Painel</button>
+            </form>
+            <p id="login-error" style="color: var(--danger); margin-top: 1rem; display: none;">Senha incorreta!</p>
+        </div>
+    </div>
+
+    <!-- Conteúdo do Painel (Oculto até o login) -->
+    <div id="app-content" style="display: none; width: 100%;">
+
+        <aside class="sidebar">
+            <h2>Click Multishop</h2>
+            <a href="#" class="nav-item active"><i class="fas fa-box"></i> Produtos</a>
+            <a href="index.html" class="nav-item" target="_blank"><i class="fas fa-external-link-alt"></i> Ver Loja</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>Gerenciar Produtos</h1>
+                <div id="connection-status" style="color: var(--text-muted);">Verificando conexão...</div>
+            </div>
+
+            <div class="setup-alert" id="setup-alert" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i> <strong>Atenção:</strong> Você precisa configurar suas
+                credenciais do Supabase no arquivo <code>admin.html</code> (nas linhas com SUPABASE_URL e
+                SUPABASE_ANON_KEY).<br><br>
+                A tabela no Supabase deve se chamar <code>produtos</code> e ter as colunas: <code>id</code>(uuid),
+                <code>title</code>(text), <code>category</code>(text), <code>price</code>(text/numeric),
+                <code>old_price</code>(text/numeric), <code>image_url</code>(text), <code>badge</code>(text).
+            </div>
+
+            <div class="card">
+                <h3 id="form-title">Adicionar Novo Produto</h3>
+                <form id="product-form">
+                    <input type="hidden" id="product_id">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Nome do Produto</label>
+                            <input type="text" id="title" required placeholder="Ex: Vinho Premium Cabernet Sauvignon">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select id="category" required>
+                                <option value="">Selecione...</option>
+                                <option value="Bebidas">Bebidas Importadas</option>
+                                <option value="Delicatessen">Delicatessen</option>
+                                <option value="Perfumaria">Perfumaria</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>URL da Imagem</label>
+                            <input type="url" id="image_url" required placeholder="https://exemplo.com/imagem.jpg">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preço Atual (R$)</label>
+                            <input type="text" id="price" required placeholder="Ex: 189,90">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preço Antigo (Opcional - R$)</label>
+                            <input type="text" id="old_price" placeholder="Ex: 250,00">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Badge (Opcional - Ex: Oferta, Top Vendas)</label>
+                            <input type="text" id="badge" placeholder="Oferta">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button type="submit" class="btn-primary" id="submit-btn" style="margin-top: 0;">
+                            <i class="fas fa-plus"></i> Salvar Produto
+                        </button>
+                        <button type="button" class="btn-danger" id="cancel-edit-btn"
+                            style="display: none; align-items: center; justify-content: center;"
+                            onclick="cancelarEdicao()">
+                            <i class="fas fa-times"></i> Cancelar Edição
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Produtos Cadastrados</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Imagem</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-list">
+                            <tr>
+                                <td colspan="5" style="text-align: center;">Carregando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🚨 INSIRA SUAS CREDENCIAIS DO SUPABASE AQUI
+        // ==========================================
+        const SUPABASE_URL = 'https://flsjtbkwuczxkssqhwzq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsc2p0Ymt3dWN6eGtzc3Fod3pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyMDQ4NTIsImV4cCI6MjA4Nzc4MDg1Mn0.yOqdb3ldiPOfXZv13hCPQtsepNvZs6fQuUZFwUuPo2U';
+
+        let supabaseClient = null;
+        let isConnected = false;
+
+        // --- SISTEMA DE LOGIN SIMPLES ---
+        const SENHA_ADMIN = "admin123"; // 👈 Troque a senha do painel aqui
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pwd = document.getElementById('admin-password').value;
+
+            if (pwd === SENHA_ADMIN) {
+                document.getElementById('login-modal').style.display = 'none';
+                document.getElementById('app-content').style.display = 'flex';
+                // Inicia o Supabase apenas após o login
+                initSupabase();
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        });
+
+        // Inicializa o cliente se as credenciais foram fornecidas
+        function initSupabase() {
+            if (SUPABASE_URL !== 'COLOQUE_SUA_URL_DO_SUPABASE_AQUI') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                isConnected = true;
+                document.getElementById('connection-status').innerHTML = '<span style="color: var(--success)"><i class="fas fa-check-circle"></i> Supabase Conectado</span>';
+                loadProducts();
+            } else {
+                document.getElementById('setup-alert').style.display = 'block';
+                document.getElementById('connection-status').innerHTML = '<span style="color: var(--danger)"><i class="fas fa-times-circle"></i> Supabase Não Configurado</span>';
+                document.getElementById('products-list').innerHTML = '<tr><td colspan="5" style="text-align: center;">Configure as credenciais primeiro.</td></tr>';
+            }
+        }
+
+        let allProducts = [];
+
+        // Formulário de Adição e Edição
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!isConnected) {
+                alert('Configure as credenciais do Supabase primeiro no código do arquivo admin.html!');
+                return;
+            }
+
+            const btn = document.getElementById('submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+            btn.disabled = true;
+
+            const productId = document.getElementById('product_id').value;
+            const newProduct = {
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                image_url: document.getElementById('image_url').value,
+                price: document.getElementById('price').value,
+                old_price: document.getElementById('old_price').value || null,
+                badge: document.getElementById('badge').value || null
+            };
+
+            try {
+                if (productId) {
+                    // Update existente
+                    const { error } = await supabaseClient
+                        .from('produtos')
+                        .update(newProduct)
+                        .eq('id', productId);
+                    if (error) throw error;
+                    alert('Produto atualizado com sucesso!');
+                    cancelarEdicao(); // Limpa e volta modo adiçao
+                } else {
+                    // Novo insert
+                    const { error } = await supabaseClient
+                        .from('produtos')
+                        .insert([newProduct]);
+                    if (error) throw error;
+                    alert('Produto adicionado com sucesso!');
+                    document.getElementById('product-form').reset();
+                }
+
+                loadProducts();
+            } catch (error) {
+                console.error('Erro ao salvar produto:', error);
+                alert('Erro ao salvar no banco de dados. Verifique a estrutura da tabela no Supabase. Erro: ' + error.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        // Carregar Produtos
+        async function loadProducts() {
+            if (!isConnected) return;
+
+            const tbody = document.getElementById('products-list');
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('produtos')
+                    .select('*')
+                    .order('id', { ascending: false });
+
+                if (error) throw error;
+
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum produto encontrado.</td></tr>';
+                    return;
+                }
+
+                allProducts = data; // Armazena array globalmente para edição
+                tbody.innerHTML = '';
+                data.forEach(product => {
+                    const priceDisplay = product.old_price
+                        ? `<strike style="color:var(--text-muted); font-size:0.8rem">R$ ${product.old_price}</strike><br>R$ ${product.price}`
+                        : `R$ ${product.price}`;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><img src="${product.image_url}" class="product-img" alt="${product.title}"></td>
+                        <td>
+                            <strong>${product.title}</strong>
+                            ${product.badge ? `<br><small style="color:var(--primary)">${product.badge}</small>` : ''}
+                        </td>
+                        <td>${product.category}</td>
+                        <td>${priceDisplay}</td>
+                        <td style="display: flex; gap: 8px;">
+                            <button onclick="editarProduto('${product.id}')" class="btn-primary" style="margin-top: 0; padding: 0.5rem; border-radius: 6px;" title="Editar">
+                                <i class="fas fa-edit" style="margin: 0;"></i>
+                            </button>
+                            <button onclick="deleteProduct('${product.id}')" class="btn-danger" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                if (error.code === '42P01') {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--danger);">Erro: A tabela "produtos" não existe no seu Supabase. Crie a tabela primeiro!</td></tr>';
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--danger);">Erro ao carregar: ${error.message}</td></tr>`;
+                }
+            }
+        }
+
+        // Deletar Produto
+        async function deleteProduct(id) {
+            if (!isConnected) return;
+
+            if (confirm('Tem certeza que deseja deletar este produto?')) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('produtos')
+                        .delete()
+                        .eq('id', id);
+
+                    if (error) throw error;
+
+                    loadProducts();
+                } catch (error) {
+                    console.error('Erro ao deletar:', error);
+                    alert('Erro ao deletar produto: ' + error.message);
+                }
+            }
+        }
+
+        // --- SISTEMA DE EDIÇÃO ---
+        function editarProduto(id) {
+            const prod = allProducts.find(p => p.id === id);
+            if (!prod) return;
+
+            document.getElementById('product_id').value = prod.id;
+            document.getElementById('title').value = prod.title;
+            document.getElementById('category').value = prod.category;
+            document.getElementById('image_url').value = prod.image_url;
+            document.getElementById('price').value = prod.price;
+            document.getElementById('old_price').value = prod.old_price || '';
+            document.getElementById('badge').value = prod.badge || '';
+
+            document.getElementById('form-title').innerText = 'Editar Produto';
+            document.getElementById('submit-btn').innerHTML = '<i class="fas fa-save"></i> Atualizar Produto';
+            document.getElementById('cancel-edit-btn').style.display = 'inline-flex';
+
+            // Rola pro formulário
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function cancelarEdicao() {
+            document.getElementById('product-form').reset();
+            document.getElementById('product_id').value = '';
+
+            document.getElementById('form-title').innerText = 'Adicionar Novo Produto';
+            document.getElementById('submit-btn').innerHTML = '<i class="fas fa-plus"></i> Salvar Produto';
+            document.getElementById('cancel-edit-btn').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

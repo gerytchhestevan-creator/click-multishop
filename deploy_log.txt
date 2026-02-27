@@ -1,0 +1,36 @@
+
+Deploying to Netlify
+────────────────────────────────────────────────────────────────
+
+[32mDeploy path: [39m       /home/leonardo/Documents/click-multishop/_site
+[32mConfiguration path: [39m/home/leonardo/Documents/click-multishop/netlify.toml
+
+⠋ Uploading blobs to deploy store...
+
+✔ Finished uploading blobs to deploy store
+⠋ Hashing files...
+⠋ Looking for a functions cache...
+✔ No cached functions were found
+✔ Finished hashing 
+⠋ CDN diffing files...
+✔ CDN requesting 2 files
+⠋ Uploading 2 files
+✔ Finished uploading 2 assets
+⠋ Waiting for deploy to go live...
+✔ Deploy is live!
+
+🚀 Deploy complete
+────────────────────────────────────────────────────────────────
+
+╭────────────────────── ⬥  Production deploy is live ⬥  ───────────────────────╮
+│                                                                              │
+│   Deployed to production URL: https://click-multishop-leonardo.netlify.app   │
+│                                                                              │
+│                              Unique deploy URL:                              │
+│    https://69a0ba24a9cc0751db1dbf4f--click-multishop-leonardo.netlify.app    │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+[32mBuild logs: [39m        https://app.netlify.com/projects/click-multishop-leonardo/deploys/69a0ba24a9cc0751db1dbf4f
+[32mFunction logs: [39m     https://app.netlify.com/projects/click-multishop-leonardo/logs/functions
+[32mEdge function Logs: [39mhttps://app.netlify.com/projects/click-multishop-leonardo/logs/edge-functions
