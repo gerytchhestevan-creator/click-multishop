@@ -123,6 +123,26 @@
                         </button>
                     </div>
 
+                    <!-- ========== CALCULADORA DE FRETE ========== -->
+                    <div class="frete-calculator">
+                        <h3 class="frete-title"><i class="fas fa-truck"></i> Calcular Frete e Prazo</h3>
+                        <div class="frete-input-row">
+                            <input type="text" id="cep-input" class="frete-cep-input" placeholder="Digite seu CEP"
+                                maxlength="9" inputmode="numeric">
+                            <button id="btn-calcular-frete" class="btn-calcular-frete">
+                                <i class="fas fa-search"></i> Calcular
+                            </button>
+                        </div>
+                        <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank"
+                            class="nao-sei-cep">
+                            <i class="fas fa-question-circle"></i> Não sei meu CEP
+                        </a>
+                        <div id="frete-resultado" class="frete-resultado" style="display:none;">
+                            <!-- Opções de frete serão inseridas aqui via JavaScript -->
+                        </div>
+                    </div>
+                    <!-- ======= FIM CALCULADORA DE FRETE ======= -->
+
                     <div class="trust-signals">
                         <div class="trust-item">
                             <i class="fas fa-shield-alt"></i>
@@ -273,8 +293,103 @@
                     }, 1500);
                 });
             }
+            // ==================================================
+            // CALCULADORA DE FRETE
+            // ==================================================
+            const cepInput = document.getElementById('cep-input');
+            const btnCalcular = document.getElementById('btn-calcular-frete');
+            const freteResultado = document.getElementById('frete-resultado');
+
+            // Formata o CEP automaticamente com máscara 00000-000
+            if (cepInput) {
+                cepInput.addEventListener('input', () => {
+                    let v = cepInput.value.replace(/\D/g, '');
+                    if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5, 8);
+                    cepInput.value = v;
+                });
+
+                cepInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') btnCalcular.click();
+                });
+            }
+
+            if (btnCalcular) {
+                btnCalcular.addEventListener('click', async () => {
+                    const cep = cepInput.value.replace(/\D/g, '');
+                    if (cep.length !== 8) {
+                        cepInput.style.borderColor = '#dc2626';
+                        cepInput.focus();
+                        setTimeout(() => cepInput.style.borderColor = '', 2000);
+                        return;
+                    }
+
+                    // Mostra loading
+                    freteResultado.style.display = 'flex';
+                    freteResultado.innerHTML = '<div class="frete-loading"><i class="fas fa-spinner fa-spin"></i> Calculando as melhores opções...</div>';
+                    btnCalcular.disabled = true;
+
+                    // Produto placeholder. Quando o sistema real carregar o produto
+                    // pelo ID via URL param, trocar por dados reais do products.js
+                    const produtoExemplo = [{
+                        id: 1,
+                        price: '189,90',
+                        weight: 1.2,
+                        width: 15,
+                        height: 30,
+                        length: 10,
+                        quantity: 1
+                    }];
+
+                    try {
+                        const response = await fetch('/api/calcularFrete', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ cep_destino: cep, produtos: produtoExemplo })
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw new Error(data.error || 'Erro ao calcular frete.');
+                        }
+
+                        if (!data.length) {
+                            freteResultado.innerHTML = '<div class="frete-vazio"><i class="fas fa-box-open"></i> Nenhuma opção de frete disponível para este CEP.</div>';
+                            return;
+                        }
+
+                        // Renderiza as opções de frete
+                        freteResultado.innerHTML = data.map(opcao => {
+                            const preco = parseFloat(opcao.preco);
+                            const precoFormatado = preco === 0 ? 'Grátis' : `R$ ${preco.toFixed(2).replace('.', ',')}`;
+                            const logoHTML = opcao.logo_url
+                                ? `<img src="${opcao.logo_url}" alt="${opcao.transportadora}" class="frete-logo">`
+                                : `<div class="frete-logo" style="display:flex;align-items:center;justify-content:center;background:#f1f5f9;font-size:1.2rem;">🚚</div>`;
+
+                            return `
+                                <div class="frete-opcao">
+                                    <div class="frete-opcao-info">
+                                        ${logoHTML}
+                                        <div>
+                                            <div class="frete-nome">${opcao.transportadora}</div>
+                                            <div class="frete-prazo">Entrega em até ${opcao.prazo_dias} dia${opcao.prazo_dias !== 1 ? 's' : ''} útil${opcao.prazo_dias !== 1 ? 'eis' : ''}</div>
+                                        </div>
+                                    </div>
+                                    <div class="frete-preco ${preco === 0 ? 'gratis' : ''}">${precoFormatado}</div>
+                                </div>`;
+                        }).join('');
+
+                    } catch (err) {
+                        freteResultado.innerHTML = `<div class="frete-erro"><i class="fas fa-exclamation-circle"></i> ${err.message}</div>`;
+                    } finally {
+                        btnCalcular.disabled = false;
+                    }
+                });
+            }
+            // ==================================================
         });
     </script>
+
 </body>
 
 </html>
