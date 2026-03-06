@@ -49,6 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProducts(localProducts);
     }
 
+    function sanitize(str) {
+        const el = document.createElement('span');
+        el.textContent = str;
+        return el.innerHTML;
+    }
+
     function renderProducts(productsList) {
         container.innerHTML = '';
         if (productsList.length === 0) {
@@ -56,23 +62,60 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        productsList.forEach((produto, index) => {
-            const html = `
-                <div class="product-card" data-category="${produto.category}">
-                    <div class="product-img-wrapper">
-                        <img src="${produto.image_url}" alt="${produto.title}" loading="lazy">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">${produto.category}</span>
-                        <h4 class="product-title">${produto.title}</h4>
-                        <div class="product-price">
-                            <span class="price">R$ ${produto.price}</span>
-                        </div>
-                        <button class="btn-buy" onclick="window.location.href='produto.html'"><i class="fas fa-shopping-cart"></i> Comprar Agora</button>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', html);
+        productsList.forEach((produto) => {
+            // SEGURANÇA: criamos elementos DOM com textContent para evitar XSS
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.dataset.category = produto.category;
+
+            const imgWrapper = document.createElement('div');
+            imgWrapper.className = 'product-img-wrapper';
+            const img = document.createElement('img');
+            img.src = produto.image_url || '';
+            img.alt = produto.title || '';
+            img.loading = 'lazy';
+            imgWrapper.appendChild(img);
+
+            const info = document.createElement('div');
+            info.className = 'product-info';
+
+            const catSpan = document.createElement('span');
+            catSpan.className = 'product-category';
+            catSpan.textContent = produto.category; // safe — sem innerHTML
+
+            const titleEl = document.createElement('h4');
+            titleEl.className = 'product-title';
+            titleEl.textContent = produto.title; // safe
+
+            const priceDiv = document.createElement('div');
+            priceDiv.className = 'product-price';
+            const priceSpan = document.createElement('span');
+            priceSpan.className = 'price';
+            priceSpan.textContent = 'R$ ' + (produto.price || '0,00');
+            priceDiv.appendChild(priceSpan);
+
+            const buyBtn = document.createElement('button');
+            buyBtn.className = 'btn-buy';
+            buyBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Comprar Agora';
+
+            // Se o produto tiver link de checkout, redireciona; senão vai para página do produto
+            const link = produto.buy_link || produto.checkout_url || null;
+            buyBtn.addEventListener('click', () => {
+                if (link) {
+                    window.open(link, '_blank', 'noopener,noreferrer');
+                } else {
+                    window.location.href = 'produto.html';
+                }
+            });
+
+            info.appendChild(catSpan);
+            info.appendChild(titleEl);
+            info.appendChild(priceDiv);
+            info.appendChild(buyBtn);
+
+            card.appendChild(imgWrapper);
+            card.appendChild(info);
+            container.appendChild(card);
         });
 
         window.reaplicarAnimacoes();

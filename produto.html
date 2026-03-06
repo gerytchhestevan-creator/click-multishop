@@ -227,6 +227,14 @@
 
             <div class="footer-bottom">
                 <p>&copy; 2026 Click Multishop Ecommerce Ltda. Todos os direitos reservados.</p>
+                <!-- INFORMAÇÕES LEGAIS — Decreto 7.962/2013 (obrigatório para e-commerce) -->
+                <p class="legal-info"
+                    style="font-size:0.75rem; color: var(--text-color, #aaa); margin-top: 0.5rem; opacity: 0.7;">
+                    Click Multishop Ecommerce Ltda. &nbsp;|&nbsp;
+                    CNPJ: <strong>XX.XXX.XXX/0001-XX</strong> &nbsp;|&nbsp; <!-- ⚠️ Substitua pelo CNPJ real -->
+                    Endereço: Rua Exemplo, 000 — Curitiba/PR &nbsp;|&nbsp; <!-- ⚠️ Substitua pelo endereço real -->
+                    E-mail: contato@clickmultishopecommerce.com.br
+                </p>
                 <div class="payment-methods">
                     <i class="fab fa-cc-visa"></i>
                     <i class="fab fa-cc-mastercard"></i>
@@ -243,6 +251,12 @@
 
     <!-- Interactive Scripts for Product Page -->
     <script>
+        // ============================================================
+        // LINK DE CHECKOUT — Configure o link real do PagBank/AppMax
+        // ⚠️ Substitua pela URL gerada no seu painel de pagamento:
+        const CHECKOUT_URL = 'https://pag.ae/SUBSTITUA-PELO-LINK-REAL';
+        // ============================================================
+
         // Quantity Logic
         function changeQuantity(change) {
             const qtyInput = document.getElementById('product-quantity');
@@ -281,16 +295,19 @@
             if (addToCartBtn) {
                 addToCartBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const originalText = addToCartBtn.innerHTML;
-                    addToCartBtn.innerHTML = '<i class="fas fa-check"></i> Adicionado com Sucesso!';
-                    addToCartBtn.style.backgroundColor = '#059669'; // Emerald Green
-                    addToCartBtn.style.transform = 'scale(0.98)';
+
+                    // Feedback visual antes do redirecionamento
+                    addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecionando...';
+                    addToCartBtn.style.backgroundColor = '#059669';
+                    addToCartBtn.disabled = true;
 
                     setTimeout(() => {
-                        addToCartBtn.innerHTML = originalText;
+                        // Redireciona para o checkout real (PagBank / AppMax)
+                        window.open(CHECKOUT_URL, '_blank', 'noopener,noreferrer');
+                        addToCartBtn.innerHTML = '<i class="fas fa-shopping-bag"></i> Adicionar ao Carrinho';
                         addToCartBtn.style.backgroundColor = '';
-                        addToCartBtn.style.transform = 'scale(1)';
-                    }, 2500);
+                        addToCartBtn.disabled = false;
+                    }, 800);
                 });
             }
 
